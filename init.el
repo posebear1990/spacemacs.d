@@ -56,7 +56,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(youdao-dictionary)
+   dotspacemacs-additional-packages '(
+                                      youdao-dictionary
+                                      evil-multiedit
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -262,7 +265,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -308,6 +311,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 	("org-cn"   . "http://elpa.zilongshanren.com/org/")
 	("gnu-cn"   . "http://elpa.zilongshanren.com/gnu/")))
 
+;; 自定义设置
+;; react-layer 设置
 (setq-default
  ;; js2-mode
  js2-basic-offset 2
@@ -322,6 +327,44 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
   (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
   (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
+
+;; evil-multiedit 设置
+;; Highlights all matches of the selection in the buffer.
+(define-key evil-visual-state-map "R" 'evil-multiedit-match-all)
+
+;; Match the word under cursor (i.e. make it an edit region). Consecutive presses will
+;; incrementally add the next unmatched match.
+(define-key evil-normal-state-map (kbd "M-d") 'evil-multiedit-match-and-next)
+;; Match selected region.
+(define-key evil-visual-state-map (kbd "M-d") 'evil-multiedit-and-next)
+;; Insert marker at point
+(define-key evil-insert-state-map (kbd "M-d") 'evil-multiedit-toggle-marker-here)
+
+;; Same as M-d but in reverse.
+(define-key evil-normal-state-map (kbd "M-D") 'evil-multiedit-match-and-prev)
+(define-key evil-visual-state-map (kbd "M-D") 'evil-multiedit-and-prev)
+
+;; OPTIONAL: If you prefer to grab symbols rather than words, use
+;; `evil-multiedit-match-symbol-and-next` (or prev).
+
+;; Restore the last group of multiedit regions.
+(define-key evil-visual-state-map (kbd "C-M-D") 'evil-multiedit-restore)
+
+;; RET will toggle the region under the cursor
+(define-key evil-multiedit-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+
+;; ...and in visual mode, RET will disable all fields outside the selected region
+(define-key evil-motion-state-map (kbd "RET") 'evil-multiedit-toggle-or-restrict-region)
+
+;; For moving between edit regions
+(define-key evil-multiedit-state-map (kbd "C-n") 'evil-multiedit-next)
+(define-key evil-multiedit-state-map (kbd "C-p") 'evil-multiedit-prev)
+(define-key evil-multiedit-insert-state-map (kbd "C-n") 'evil-multiedit-next)
+(define-key evil-multiedit-insert-state-map (kbd "C-p") 'evil-multiedit-prev)
+
+;; Ex command that allows you to invoke evil-multiedit with a regular expression, e.g.
+(evil-ex-define-cmd "ie[dit]" 'evil-multiedit-ex-match)
+
 )
 
 (defun dotspacemacs/user-config ()
